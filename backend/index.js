@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const app = express();
 app.use(express.json());
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:9545'));
+const web3 = new Web3('http://127.0.0.1:9545');
 
 const contractABI = [
     {
@@ -11,6 +11,26 @@ const contractABI = [
             {
                 "internalType": "string",
                 "name": "did",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "email",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "phone",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "dob",
                 "type": "string"
             }
         ],
@@ -33,10 +53,31 @@ const contractABI = [
                 "internalType": "string",
                 "name": "",
                 "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }
         ],
         "stateMutability": "view",
-        "type": "function"
+        "type": "function",
+        "constant": true
     }
 ];
 
@@ -44,10 +85,10 @@ const contractAddress = '0xFB02cB5A46468476Cb831A993dC400E4c7203758'; // Replace
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 app.post('/register', async (req, res) => {
-    const { did } = req.body;
+    const { did, name, email, phone, dob } = req.body;
     const accounts = await web3.eth.getAccounts();
     try {
-        await contract.methods.createIdentity(did).send({ from: accounts[0] });
+        await contract.methods.createIdentity(did, name, email, phone, dob).send({ from: accounts[0] });
         res.send({ success: true });
     } catch (error) {
         res.status(500).send({ success: false, error: error.message });
