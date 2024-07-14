@@ -94,7 +94,11 @@ function App() {
 
   const registerIdentity = async () => {
     const accounts = await web3.eth.getAccounts();
-    await contract.methods.createIdentity(did, name, email, phone, dob).send({ from: accounts[0] });
+    await contract.methods.createIdentity(did, name, email, phone, dob).send({
+      from: accounts[0],
+      gas: 3000000, // Specify gas limit
+      gasPrice: web3.utils.toWei('10', 'gwei') // Specify gas price
+    });
   };
 
   const getIdentity = async () => {
